@@ -1,0 +1,118 @@
+esphome:
+  name: fan_test_1
+  platform: ESP32
+  board: esp32doit-devkit-v1
+  includes:
+    - test_fan_1.h
+  
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Fan Test 1 Fallback Hotspot"
+    password: !secret password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret password
+
+ota:
+  password: !secret password
+
+binary_sensor:
+  - platform: gpio
+    id: vbutton_light
+    pin:
+      number: GPIO34
+      inverted: True
+    on_press:
+      then:
+        - light.toggle: test_fan_light
+
+  - platform: gpio
+    id: vbutton_relay_1
+    pin:
+      number: GPIO35
+      inverted: True
+    on_press:
+      then:
+        - switch.toggle: low_relay
+
+  - platform: gpio
+    id: vbutton_relay_2
+    pin:
+      number: GPIO32
+      inverted: True
+    on_press:
+      then:
+        - switch.toggle: med_relay
+
+  - platform: gpio
+    id: vbutton_relay_3
+    pin:
+      number: GPIO33
+      inverted: True
+    on_press:
+      then:
+        - switch.toggle: high_relay
+
+output:
+  - platform: custom
+    type: float
+    outputs:
+      id: fanoutput
+    lambda: |-
+      auto test_fan = new CustomFanOutput();
+      App.register_component(test_fan);
+      return {test_fan};
+
+  - platform: gpio
+    pin: GPIO2
+    id: light_output
+  - platform: gpio
+    pin: GPIO4
+    id: swing
+#  - platform: gpio
+#    pin: GPIO23
+#    id: low
+#  - platform: gpio
+#    pin: GPIO21
+#    id: med
+#  - platform: gpio
+#    pin: GPIO19
+#    id: high
+
+light:
+  - platform: binary
+    name: "Test Fan Light"
+    output: light_output
+    id: test_fan_light
+
+switch:
+  - platform: gpio
+    pin: GPIO23
+    id: low_relay
+    interlock: &speed_relays [low_relay, med_relay, high_relay]
+  - platform: gpio
+    pin: GPIO21
+    id: med_relay
+    interlock: *speed_relays
+  - platform: gpio
+    pin: GPIO19
+    id: high_relay
+    interlock: *speed_relays
+fan:
+  - platform: speed
+    output: fanoutput
+    id: test_fan
+    name: "Test Fan"
+    oscillation_output: swing

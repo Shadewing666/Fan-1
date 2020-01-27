@@ -30,7 +30,7 @@ ota:
 
 binary_sensor:
   - platform: gpio
-    id: vbutton_light
+    id: button_light
     pin:
       number: GPIO34
       inverted: True
@@ -39,7 +39,7 @@ binary_sensor:
         - light.toggle: test_fan_light
 
   - platform: gpio
-    id: vbutton_relay_1
+    id: button_low
     pin:
       number: GPIO35
       inverted: True
@@ -48,7 +48,7 @@ binary_sensor:
         - switch.toggle: low_relay
 
   - platform: gpio
-    id: vbutton_relay_2
+    id: button_med
     pin:
       number: GPIO32
       inverted: True
@@ -57,7 +57,7 @@ binary_sensor:
         - switch.toggle: med_relay
 
   - platform: gpio
-    id: vbutton_relay_3
+    id: button_high
     pin:
       number: GPIO33
       inverted: True

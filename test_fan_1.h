@@ -32,3 +32,4 @@ class CustomFanOutput : public Component, public FloatOutput {
       }
     }
 };
+

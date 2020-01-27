@@ -102,14 +102,22 @@ switch:
     pin: GPIO23
     id: low_relay
     interlock: &speed_relays [low_relay, med_relay, high_relay]
+    restore_mode: ALWAYS_OFF
   - platform: gpio
     pin: GPIO21
     id: med_relay
     interlock: *speed_relays
+    restore_mode: ALWAYS_OFF
   - platform: gpio
     pin: GPIO19
     id: high_relay
     interlock: *speed_relays
+    restore_mode: ALWAYS_OFF
+  - platform: gpio
+    pin: 
+      number: GPIO4
+      mode: OUTPUT
+    id: swing_relay
 fan:
   - platform: speed
     output: fanoutput
